@@ -22,19 +22,24 @@ public class WelcomeStage extends Stage {
         show();
     }
 
-    private static class WelcomeStageHolder{
+    // Singleton pattern for creating only one instance of WelcomeStage
+    private static class WelcomeStageHolder {
         private static WelcomeStage INSTANCE;
     }
 
-    public static WelcomeStage getInstance() throws IOException{
-        WelcomeStageHolder.INSTANCE =
-                WelcomeStageHolder.INSTANCE != null ?
-                        WelcomeStageHolder.INSTANCE : new WelcomeStage();
+    // Method to get the instance of WelcomeStage
+    public static WelcomeStage getInstance() throws IOException {
+        if (WelcomeStageHolder.INSTANCE == null) {
+            WelcomeStageHolder.INSTANCE = new WelcomeStage();
+        }
         return WelcomeStageHolder.INSTANCE;
     }
 
-    public static void deleteInstance(){
-        WelcomeStageHolder.INSTANCE.close();
-        WelcomeStageHolder.INSTANCE = null;
+    // Method to delete the instance and close the stage
+    public static void deleteInstance() {
+        if (WelcomeStageHolder.INSTANCE != null) {
+            WelcomeStageHolder.INSTANCE.close();
+            WelcomeStageHolder.INSTANCE = null;
+        }
     }
 }
