@@ -13,7 +13,7 @@ public class GameStage extends Stage {
     public GameStage() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/miniproyecto2/game-view.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 1280, 780);
+        Scene scene = new Scene(root, 800, 600);
         setScene(scene);
         setTitle("Sudoku 6x6");
         getIcons().add(new Image(String.valueOf(

@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -23,6 +24,20 @@ import java.util.Random;
 public class GameController {
     @FXML
     private Button buttonHelp;
+
+    private List<List<Integer>> rows;
+    private List<List<Integer>> cols;
+    private List<List<Integer>> block;
+    private IGame game;
+    private int helpCounter = 0;
+
+    private String[] head_position = {"A","B","C","D","E","F"};
+
+    @FXML
+    private Label error_label;
+
+    @FXML
+    private Label move_label;
 
     @FXML
     private TextField cell_00;
@@ -135,10 +150,6 @@ public class GameController {
     @FXML
     private TextField[][] cells  = new TextField[6][6];
 
-    private List<List<Integer>> rows;
-    private List<List<Integer>> cols;
-    private List<List<Integer>> block;
-
     @FXML
     private void initialize() {
         rows = new ArrayList<>();
@@ -184,7 +195,6 @@ public class GameController {
                     }
                     else {
                         int newNumber = Integer.parseInt(newValue);
-
                     }
                 });
             }
@@ -192,13 +202,9 @@ public class GameController {
 
     }
 
-    private IGame game;
-    private int helpCounter = 0;
-
     public GameController() {
         game = new Game(); // Initialize the game logic
     }
-
 
     // Set up validation and event handling for the grid
     private void setupValidation() {
@@ -206,7 +212,6 @@ public class GameController {
             for (int col = 0; col < 6; col++) {
                 int currentRow = row;
                 int currentCol = col;
-
                 cells[row][col].textProperty().addListener((observable, oldValue, newValue) -> {
                     if (!newValue.matches("[1-6]?")) {
                         // Use runLater to avoid modifying the text during the listener call
@@ -216,11 +221,10 @@ public class GameController {
                         if (game.isValidMove(currentRow, currentCol, number)) {
                             game.makeMove(currentRow, currentCol, number); // Make the move
                             // Update the cell style for valid input
-                            Platform.runLater(() -> cells[currentRow][currentCol].setStyle("-fx-border-color: green;"));
+                            Platform.runLater(() -> cells[currentRow][currentCol].setStyle("-fx-text-fill: #325AAF; -fx-border-color: #435D6C; -fx-border-radius: 0;"));
                             checkWinCondition();  // Check if the game is complete after every move
                         } else {
-                            // If the move is invalid, show a red border
-                            Platform.runLater(() -> cells[currentRow][currentCol].setStyle("-fx-border-color: red;"));
+                            Platform.runLater(() -> cells[currentRow][currentCol].setStyle("-fx-text-fill: #EF4B4C; -fx-border-color: #435D6C; -fx-border-radius: 0;"));
                         }
                     }
                 });
@@ -232,7 +236,7 @@ public class GameController {
     @FXML
     public void handleHelp(ActionEvent event) {
         if (helpCounter >= 30) {
-            showAlert("Help Limit", "You have already used the maximum of 5 helps.");
+            showAlert("Limite de ayuda", "Haz gastado todas tus ayudas :(");
             return; // Don't provide more than 5 helps
         }
 
@@ -247,7 +251,7 @@ public class GameController {
         }
 
         if (emptyCells.isEmpty()) {
-            showAlert("No Empty Cells", "No more empty cells are available.");
+            showAlert("No hay celda vacia", "Por favor haz espacio en una celda para poder ayudarte.");
             return; // No empty cells to suggest help for
         }
 
@@ -262,10 +266,11 @@ public class GameController {
 
         // Suggest the valid number and update the grid
         cells[row][col].setText(String.valueOf(number));
-        cells[row][col].setStyle("-fx-border-color: green;"); // Highlight the cell
+        Platform.runLater(() -> cells[row][col].setStyle("-fx-text-fill: #000; -fx-border-color: #435D6C; -fx-border-radius: 0;")); // Highlight the cell
         game.makeMove(row, col, number);
+
         helpCounter++; // Increment help counter
-        showAlert("Help", "Suggested number " + number + " for cell [" + row + "," + col + "].");
+        showAlert("Ayuda", "El número es " + number + " para la celda [" + head_position[col] +  ","  + (row + 1) +"].");
     }
 
     // Helper method to show alerts
@@ -277,10 +282,9 @@ public class GameController {
     }
 
     // Check if the game is complete and show a win message
-    // Check if the game is complete and show a win message
     private void checkWinCondition() {
         if (game.isComplete()) {
-            showAlertAndExit("Victory!", "Congratulations, you have completed the Sudoku!");
+            showAlertAndExit("¡Enhorabuena!", "Felicitaciones, haz ganado el Sudoku :)");
         }
     }
 
@@ -292,7 +296,7 @@ public class GameController {
         alert.show(); // Show the alert non-blocking
 
         // Use PauseTransition to delay the exit by 2 seconds (to allow the user to read the message)
-        PauseTransition pause = new PauseTransition(Duration.seconds(2)); // Adjust duration as needed
+        PauseTransition pause = new PauseTransition(Duration.seconds(5)); // Adjust duration as needed
         pause.setOnFinished(event -> {
             Platform.exit(); // Exit the application after the pause
         });
