@@ -47,7 +47,7 @@ public class CellValidationAdapter implements ChangeListener<String> {
                 controller.getGame().makeMove(row, col, number);
                 Platform.runLater(() -> {
                     controller.getCells()[row][col].setStyle("-fx-text-fill: #325AAF; -fx-border-color: #435D6C; -fx-border-radius: 0;");
-                    controller.getCells()[row][col].setEditable(false);  // Deshabilitar la celda cuando el movimiento es válido
+                    controller.getCells()[row][col].setEditable(false);
                 });
                 controller.checkWinCondition();
             } else {
