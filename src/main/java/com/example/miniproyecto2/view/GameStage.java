@@ -8,8 +8,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Represents the game stage of the Sudoku application.
+ * This stage displays the main game interface.
+ */
 public class GameStage extends Stage {
 
+    /**
+     * Constructs a new GameStage and initializes the UI.
+     *
+     * @throws IOException If the FXML file cannot be loaded.
+     */
     public GameStage() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/miniproyecto2/game-view.fxml"));
         Parent root = loader.load();
@@ -22,12 +31,19 @@ public class GameStage extends Stage {
         show();
     }
 
-    // Singleton pattern for creating only one instance of GameStage
+    /**
+     * Singleton pattern for creating only one instance of GameStage, intercal class.
+     */
     private static class GameStageHolder{
         private static GameStage INSTANCE;
     }
 
-    // Method to get the instance of GameStage
+    /**
+     * Gets the singleton instance of GameStage.
+     *
+     * @return The instance of GameStage.
+     * @throws IOException If the FXML file cannot be loaded.
+     */
     public static GameStage getInstance() throws IOException{
         GameStageHolder.INSTANCE =
                 GameStageHolder.INSTANCE != null ?
@@ -35,7 +51,9 @@ public class GameStage extends Stage {
         return GameStageHolder.INSTANCE;
     }
 
-    // Method to delete the instance and close the stage
+    /**
+     * Deletes the instance of GameStage and closes the stage.
+     */
     public static void deleteInstance(){
         GameStageHolder.INSTANCE.close();
         GameStageHolder.INSTANCE = null;

@@ -147,7 +147,7 @@
                <children>
                   <Label fx:id="helpText" textFill="WHITE" wrapText="true">
                      <font>
-                        <Font name="SansSerif Regular" size="12.0" />
+                        <Font name="SansSerif Regular" size="18.0" />
                      </font>
                   </Label>
                </children>

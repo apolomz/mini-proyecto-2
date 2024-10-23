@@ -8,8 +8,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Represents the welcome stage of the Sudoku application.
+ * This stage displays the welcome screen before starting the game.
+ */
 public class WelcomeStage extends Stage {
 
+    /**
+     * Constructs a new WelcomeStage and initializes the UI.
+     *
+     * @throws IOException If the FXML file cannot be loaded.
+     */
     public WelcomeStage() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/miniproyecto2/welcome-view.fxml"));
         Parent root = loader.load();
@@ -22,12 +31,19 @@ public class WelcomeStage extends Stage {
         show();
     }
 
-    // Singleton pattern for creating only one instance of WelcomeStage
+    /**
+     * Singleton pattern for creating only one instance of WelcomeStage, Internal Class.
+     */
     private static class WelcomeStageHolder {
         private static WelcomeStage INSTANCE;
     }
 
-    // Method to get the instance of WelcomeStage
+    /**
+     * Gets the singleton instance of WelcomeStage.
+     *
+     * @return The instance of WelcomeStage.
+     * @throws IOException If the FXML file cannot be loaded.
+     */
     public static WelcomeStage getInstance() throws IOException {
         if (WelcomeStageHolder.INSTANCE == null) {
             WelcomeStageHolder.INSTANCE = new WelcomeStage();
@@ -35,7 +51,9 @@ public class WelcomeStage extends Stage {
         return WelcomeStageHolder.INSTANCE;
     }
 
-    // Method to delete the instance and close the stage
+    /**
+     * Deletes the instance of WelcomeStage and closes the stage.
+     */
     public static void deleteInstance() {
         if (WelcomeStageHolder.INSTANCE != null) {
             WelcomeStageHolder.INSTANCE.close();

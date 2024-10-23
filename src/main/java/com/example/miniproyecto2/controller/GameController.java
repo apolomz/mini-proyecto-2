@@ -13,7 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ *  Controller class for managing the game's UI and logic.
+ */
 public class GameController {
+
+    /**
+     * @param rows The list of rows for managing the grid's state.
+     * @param cols The list of columns for managing the grid's state.
+     * @param block The list of blocks for 2x3 sections of the grid.
+     * @param game The instance of the Game class managing the game's logic.
+     * @param help_counter A counter that keeps track of how many help options the player has used.
+     * @param head_position The array storing the column headers for display purposes.
+     * @param cells A 2D array of TextField elements representing the 6x6 Sudoku grid.
+     * @param helpText The label used to display messages related to the help functionality.
+     * @param buttonHelp The button used to request a help suggestion.
+     * @param resetButton The button to reset the game.
+     */
 
     private List<List<Integer>> rows;
     private List<List<Integer>> cols;
@@ -50,12 +66,20 @@ public class GameController {
     @FXML
     private Button resetButton;
 
+    /**
+     * Handles the reset button action to reset the game.
+     *
+     * @param event The action event triggered by the button.
+     */
     @FXML
     void handleReset(ActionEvent event) {
         resetGame();
         helpText.setText("");
     }
 
+    /**
+     * Initializes the controller and sets up the grid and validation.
+     */
     @FXML
     private void initialize() {
         rows = new ArrayList<>();
@@ -70,11 +94,15 @@ public class GameController {
         for (int i = 0; i < 6; i++) {
             block.add(new ArrayList<>());
         }
+        game = new Game();
 
         initializeTextFieldGrid();
         setupValidation();
     }
 
+    /**
+     * Initializes the text field grid.
+     */
     @FXML
     private void initializeTextFieldGrid() {
         cells[0][0] = cell_00; cells[0][1] = cell_01; cells[0][2] = cell_02; cells[0][3] = cell_03; cells[0][4] = cell_04; cells[0][5] = cell_05;
@@ -85,36 +113,32 @@ public class GameController {
         cells[5][0] = cell_50; cells[5][1] = cell_51; cells[5][2] = cell_52; cells[5][3] = cell_53; cells[5][4] = cell_54; cells[5][5] = cell_55;
     }
 
+    /**
+     * Gets the grid of cells.
+     *
+     * @return The grid of TextField objects.
+     */
     public TextField[][] getCells() {
         return cells;
     }
 
+    /**
+     * Sets up validation for the cells in the grid.
+     */
     private void setupValidation() {
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 6; col++) {
-                int currentRow = row;
-                int currentCol = col;
-                cells[row][col].textProperty().addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.matches("[1-6]?")) {
-                        Platform.runLater(() -> cells[currentRow][currentCol].setText(""));
-                    } else if (!newValue.isEmpty()) {
-                        int number = Integer.parseInt(newValue);
-                        if (game.isValidMove(currentRow, currentCol, number)) {
-                            game.makeMove(currentRow, currentCol, number);
-                            Platform.runLater(() -> {
-                                cells[currentRow][currentCol].setStyle("-fx-text-fill: #325AAF; -fx-border-color: #435D6C; -fx-border-radius: 0;");
-                                cells[currentRow][currentCol].setEditable(false);
-                            });
-                            checkWinCondition();
-                        } else {
-                            Platform.runLater(() -> cells[currentRow][currentCol].setStyle("-fx-text-fill: #EF4B4C; -fx-border-color: #435D6C; -fx-border-radius: 0;"));
-                        }
-                    }
-                });
+                cells[row][col].textProperty().addListener(new CellValidationAdapter(this, row, col));
             }
         }
     }
 
+
+    /**
+     * Handles the help button action to suggest a number for an empty cell.
+     *
+     * @param event The action event triggered by the button.
+     */
     @FXML
     public void handleHelp(ActionEvent event) {
         if (help_counter >= 6) {
@@ -151,6 +175,9 @@ public class GameController {
         showMessage("Ayuda utilizada en celda [" + head_position[col] + "][" + (row + 1) + "]: Número sugerido => " + number);
     }
 
+    /**
+     * Checks if the player has won the game.
+     */
     public void checkWinCondition() {
         if (game.isComplete()) {
             showMessage("¡Enhorabuena! Felicitaciones, has ganado el Sudoku :)");
@@ -164,6 +191,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Resets the game state and UI.
+     */
     private void resetGame() {
         game = new Game();
         for (int row = 0; row < 6; row++) {
@@ -178,11 +208,21 @@ public class GameController {
         helpText.setText("");
     }
 
+    /**
+     * Displays a message in the help text label.
+     *
+     * @param message The message to display.
+     */
     private void showMessage(String message) {
         helpText.setText(message);
     }
 
 
+    /**
+     * Gets the current game instance.
+     *
+     * @return The game instance.
+     */
     public IGame getGame() {
         return game;
     }

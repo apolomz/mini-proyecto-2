@@ -11,19 +11,29 @@ public class Game implements IGame {
     private int[][] grid;  // Grid visible to the player
     private int[][] solution;  // The full solution of the puzzle
 
+    /**
+     * Initializes the game grid and generates a solution.
+     */
     public Game() {
         grid = new int[6][6];  // Initialize the grid for the user
         solution = new int[6][6];  // Initialize the full solution grid
         generateSolution();
     }
 
-    // Generates a full valid Sudoku solution
+    /**
+     * Generates a full valid Sudoku solution.
+     */
     private void generateSolution() {
         System.out.println("Solución del juego generado");
         fillGrid(solution);  // Fill the solution grid with a valid Sudoku
     }
 
-    // Fills the grid using backtracking
+    /**
+     * Fills the grid using backtracking to create a valid Sudoku.
+     *
+     * @param grid The grid to fill.
+     * @return True if the grid is successfully filled, false otherwise.
+     */
     private boolean fillGrid(int[][] grid) {
         List<Integer> numbers = new ArrayList<>();
         for (int i = 1; i <= 6; i++) {
@@ -50,19 +60,23 @@ public class Game implements IGame {
         return true;
     }
 
-    // Validates if a number can be placed in a specific cell for the solution
+    /**
+     * Validates if a number can be placed in a specific cell for the solution.
+     *
+     * @param grid The grid to check.
+     * @param row The row of the cell.
+     * @param col The column of the cell.
+     * @param number The number to place.
+     * @return True if the move is valid, false otherwise.
+     */
     private boolean isValidMoveForSolution(int[][] grid, int row, int col, int number) {
-        // Check row
         for (int i = 0; i < 6; i++) {
             if (grid[row][i] == number) return false;
         }
-
-        // Check column
         for (int i = 0; i < 6; i++) {
             if (grid[i][col] == number) return false;
         }
 
-        // Check block (2x3)
         int blockRowStart = (row / 2) * 2;
         int blockColStart = (col / 3) * 3;
         for (int r = blockRowStart; r < blockRowStart + 2; r++) {
@@ -74,23 +88,41 @@ public class Game implements IGame {
         return true;
     }
 
+    /**
+     * Checks if a move is valid.
+     *
+     * @param row The row of the cell.
+     * @param col The column of the cell.
+     * @param number The number to place.
+     * @return True if the move is valid, false otherwise.
+     */
     @Override
     public boolean isValidMove(int row, int col, int number) {
         // Validate if the move is correct according to the solution
         return solution[row][col] == number;
     }
 
+    /**
+     * Makes a move on the grid.
+     *
+     * @param row The row of the cell.
+     * @param col The column of the cell.
+     * @param number The number to place.
+     */
     @Override
     public void makeMove(int row, int col, int number) {
-        // If the move is valid, update the player's grid
         if (isValidMove(row, col, number)) {
             grid[row][col] = number;
         }
     }
 
+    /**
+     * Checks if the puzzle is complete.
+     *
+     * @return True if complete, false otherwise.
+     */
     @Override
     public boolean isComplete() {
-        // Check if the player's grid matches the solution
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 6; col++) {
                 if (grid[row][col] != solution[row][col]) {
@@ -101,7 +133,11 @@ public class Game implements IGame {
         return true;
     }
 
-    // Get position and return the array
+    /**
+     * Gets the solution grid.
+     *
+     * @return The solution grid.
+     */
     public int[][] getSolution() {
         return solution;  // Return the solution grid
     }
