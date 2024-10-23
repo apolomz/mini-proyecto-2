@@ -19,6 +19,7 @@ public class Game implements IGame {
 
     // Generates a full valid Sudoku solution
     private void generateSolution() {
+        System.out.println("Solución del juego generado");
         fillGrid(solution);  // Fill the solution grid with a valid Sudoku
     }
 
@@ -100,12 +101,8 @@ public class Game implements IGame {
         return true;
     }
 
-    @Override
-    public int[][] getCurrentGrid() {
-        return grid;
-    }
-
+    // Get position and return the array
     public int[][] getSolution() {
-        return solution;  // Return the solution grid (for help functionality)
+        return solution;  // Return the solution grid
     }
 }

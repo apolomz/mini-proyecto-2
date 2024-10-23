@@ -14,8 +14,6 @@ public interface IGame {
     // Check if the puzzle is complete
     boolean isComplete();
 
-    // Get the current state of the grid
-    int[][] getCurrentGrid();
-
+    // Get solution array
     int[][] getSolution();
 }

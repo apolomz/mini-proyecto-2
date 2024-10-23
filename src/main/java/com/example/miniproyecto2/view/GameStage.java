@@ -22,10 +22,12 @@ public class GameStage extends Stage {
         show();
     }
 
+    // Singleton pattern for creating only one instance of GameStage
     private static class GameStageHolder{
         private static GameStage INSTANCE;
     }
 
+    // Method to get the instance of GameStage
     public static GameStage getInstance() throws IOException{
         GameStageHolder.INSTANCE =
                 GameStageHolder.INSTANCE != null ?
@@ -33,6 +35,7 @@ public class GameStage extends Stage {
         return GameStageHolder.INSTANCE;
     }
 
+    // Method to delete the instance and close the stage
     public static void deleteInstance(){
         GameStageHolder.INSTANCE.close();
         GameStageHolder.INSTANCE = null;

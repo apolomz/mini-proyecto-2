@@ -22,22 +22,19 @@ import java.util.List;
 import java.util.Random;
 
 public class GameController {
-    @FXML
-    private Button buttonHelp;
 
     private List<List<Integer>> rows;
     private List<List<Integer>> cols;
     private List<List<Integer>> block;
+
     private IGame game;
-    private int helpCounter = 0;
+
+    private int help_counter = 0;
 
     private String[] head_position = {"A","B","C","D","E","F"};
 
     @FXML
-    private Label error_label;
-
-    @FXML
-    private Label move_label;
+    private Button buttonHelp;
 
     @FXML
     private TextField cell_00;
@@ -160,14 +157,14 @@ public class GameController {
             rows.add(new ArrayList<>());
             cols.add(new ArrayList<>());
         }
+
         for (int i = 0; i < 6; i++) {
             block.add(new ArrayList<>());
         }
+
         initializeTextFieldGrid();
         validation();
         cells = new TextField[6][6];
-        initializeTextFieldGrid();
-        setupValidation();
         initializeTextFieldGrid();
         setupValidation();
     }
@@ -190,6 +187,7 @@ public class GameController {
                 int currentCol = col;
 
                 cells[row][col].textProperty().addListener((observable, oldValue, newValue) -> {
+                    // The number is out of range so will set null
                     if(!newValue.matches("[1-6]")){
                         cells[currentRow][currentCol].setText("");
                     }
@@ -235,9 +233,11 @@ public class GameController {
     // Handle the help button to suggest a valid number
     @FXML
     public void handleHelp(ActionEvent event) {
-        if (helpCounter >= 30) {
+        // Limit to help
+        if (help_counter >= 30) {
+            buttonHelp.setDisable(true);
             showAlert("Limite de ayuda", "Haz gastado todas tus ayudas :(");
-            return; // Don't provide more than 5 helps
+            return;
         }
 
         // Find an empty cell
@@ -251,7 +251,7 @@ public class GameController {
         }
 
         if (emptyCells.isEmpty()) {
-            showAlert("No hay celda vacia", "Por favor haz espacio en una celda para poder ayudarte.");
+            showAlert("No hay celdas vacias", "Por favor haz espacio en una celda para poder ayudarte.");
             return; // No empty cells to suggest help for
         }
 
@@ -269,11 +269,11 @@ public class GameController {
         Platform.runLater(() -> cells[row][col].setStyle("-fx-text-fill: #000; -fx-border-color: #435D6C; -fx-border-radius: 0;")); // Highlight the cell
         game.makeMove(row, col, number);
 
-        helpCounter++; // Increment help counter
-        showAlert("Ayuda", "El número es " + number + " para la celda [" + head_position[col] +  ","  + (row + 1) +"].");
+        help_counter++; // Increment help counter
+        showAlert("Información de Ayuda", "Celda: [" + head_position[col] + "]["  + (row + 1) + "] El número es => " + number );
     }
 
-    // Helper method to show alerts
+    // Helper method to show alerts (Modal Style)
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -295,7 +295,7 @@ public class GameController {
         alert.setContentText(content);
         alert.show(); // Show the alert non-blocking
 
-        // Use PauseTransition to delay the exit by 2 seconds (to allow the user to read the message)
+        // Use PauseTransition to delay the exit by 5 seconds (to allow the user to read the message)
         PauseTransition pause = new PauseTransition(Duration.seconds(5)); // Adjust duration as needed
         pause.setOnFinished(event -> {
             Platform.exit(); // Exit the application after the pause
