@@ -2,21 +2,14 @@ package com.example.miniproyecto2.controller;
 
 import com.example.miniproyecto2.model.Game;
 import com.example.miniproyecto2.model.IGame;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -37,115 +30,38 @@ public class GameController {
     private Button buttonHelp;
 
     @FXML
-    private TextField cell_00;
+    private TextField cell_00, cell_01, cell_02, cell_03, cell_04, cell_05;
 
     @FXML
-    private TextField cell_01;
+    private TextField cell_10, cell_11, cell_12, cell_13, cell_14, cell_15;
 
     @FXML
-    private TextField cell_02;
+    private TextField cell_20, cell_21, cell_22, cell_23, cell_24, cell_25;
 
     @FXML
-    private TextField cell_03;
+    private TextField cell_30, cell_31, cell_32, cell_33, cell_34, cell_35;
 
     @FXML
-    private TextField cell_04;
+    private TextField cell_40, cell_41, cell_42, cell_43, cell_44, cell_45;
 
     @FXML
-    private TextField cell_05;
+    private TextField cell_50, cell_51, cell_52, cell_53, cell_54, cell_55;
 
-    @FXML
-    private TextField cell_10;
-
-    @FXML
-    private TextField cell_11;
-
-    @FXML
-    private TextField cell_12;
-
-    @FXML
-    private TextField cell_13;
-
-    @FXML
-    private TextField cell_14;
-
-    @FXML
-    private TextField cell_15;
-
-    @FXML
-    private TextField cell_20;
-
-    @FXML
-    private TextField cell_21;
-
-    @FXML
-    private TextField cell_22;
-
-    @FXML
-    private TextField cell_23;
-
-    @FXML
-    private TextField cell_24;
-
-    @FXML
-    private TextField cell_25;
-
-    @FXML
-    private TextField cell_30;
-
-    @FXML
-    private TextField cell_31;
-
-    @FXML
-    private TextField cell_32;
-
-    @FXML
-    private TextField cell_33;
-
-    @FXML
-    private TextField cell_34;
-
-    @FXML
-    private TextField cell_35;
-
-    @FXML
-    private TextField cell_40;
-
-    @FXML
-    private TextField cell_41;
-
-    @FXML
-    private TextField cell_42;
-
-    @FXML
-    private TextField cell_43;
-
-    @FXML
-    private TextField cell_44;
-
-    @FXML
-    private TextField cell_45;
-
-    @FXML
-    private TextField cell_50;
-
-    @FXML
-    private TextField cell_51;
-
-    @FXML
-    private TextField cell_52;
-
-    @FXML
-    private TextField cell_53;
-
-    @FXML
-    private TextField cell_54;
-
-    @FXML
-    private TextField cell_55;
 
     @FXML
     private TextField[][] cells  = new TextField[6][6];
+
+    @FXML
+    private Label helpText;
+
+    @FXML
+    private Button resetButton;
+
+    @FXML
+    void handleReset(ActionEvent event) {
+        resetGame();
+        helpText.setText("");
+    }
 
     @FXML
     private void initialize() {
@@ -220,6 +136,7 @@ public class GameController {
                             game.makeMove(currentRow, currentCol, number); // Make the move
                             // Update the cell style for valid input
                             Platform.runLater(() -> cells[currentRow][currentCol].setStyle("-fx-text-fill: #325AAF; -fx-border-color: #435D6C; -fx-border-radius: 0;"));
+                            cells[currentRow][currentCol].setEditable(false);
                             checkWinCondition();  // Check if the game is complete after every move
                         } else {
                             Platform.runLater(() -> cells[currentRow][currentCol].setStyle("-fx-text-fill: #EF4B4C; -fx-border-color: #435D6C; -fx-border-radius: 0;"));
@@ -234,9 +151,9 @@ public class GameController {
     @FXML
     public void handleHelp(ActionEvent event) {
         // Limit to help
-        if (help_counter >= 30) {
+        if (help_counter >= 6) {
             buttonHelp.setDisable(true);
-            showAlert("Limite de ayuda", "Haz gastado todas tus ayudas :(");
+            showMessage("Has gastado todas tus ayudas :(");
             return;
         }
 
@@ -251,7 +168,7 @@ public class GameController {
         }
 
         if (emptyCells.isEmpty()) {
-            showAlert("No hay celdas vacias", "Por favor haz espacio en una celda para poder ayudarte.");
+            showMessage("No hay celdas vacías para ayudarte.");
             return; // No empty cells to suggest help for
         }
 
@@ -270,37 +187,41 @@ public class GameController {
         game.makeMove(row, col, number);
 
         help_counter++; // Increment help counter
-        showAlert("Información de Ayuda", "Celda: [" + head_position[col] + "]["  + (row + 1) + "] El número es => " + number );
-    }
-
-    // Helper method to show alerts (Modal Style)
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.showAndWait();
+        showMessage("Ayuda utilizada en celda [" + head_position[col] + "]["  + (row + 1) + "]: Número sugerido => " + number);
     }
 
     // Check if the game is complete and show a win message
     private void checkWinCondition() {
         if (game.isComplete()) {
-            showAlertAndExit("¡Enhorabuena!", "Felicitaciones, haz ganado el Sudoku :)");
+            showMessage("¡Enhorabuena! Felicitaciones, haz ganado el Sudoku :)");
+
+            buttonHelp.setDisable(true);
+
+            for (int row = 0; row < 6; row++) {
+                for (int col = 0; col < 6; col++) {
+                    cells[row][col].setStyle("-fx-text-fill: gold; -fx-border-color: #435D6C; -fx-border-radius: 0;");
+                    cells[row][col].setEditable(false); // Disable further editing
+                }
+            }
         }
     }
 
-    // Show the winning alert and then exit the application
-    private void showAlertAndExit(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setContentText(content);
-        alert.show(); // Show the alert non-blocking
+    private void resetGame() {
+        game = new Game();
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 6; col++) {
+                cells[row][col].setText("");
+                cells[row][col].setEditable(true);
+                cells[row][col].setStyle("");
+            }
+        }
+        help_counter = 0;
+        buttonHelp.setDisable(false);
+        helpText.setText("");
+    }
 
-        // Use PauseTransition to delay the exit by 5 seconds (to allow the user to read the message)
-        PauseTransition pause = new PauseTransition(Duration.seconds(5)); // Adjust duration as needed
-        pause.setOnFinished(event -> {
-            Platform.exit(); // Exit the application after the pause
-        });
-        pause.play();
+    private void showMessage(String message){
+        helpText.setText(message);
     }
 
 
