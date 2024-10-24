@@ -200,7 +200,7 @@ public class GameController {
             for (int col = 0; col < 6; col++) {
                 cells[row][col].setText("");
                 cells[row][col].setEditable(true);
-                cells[row][col].setStyle("");
+                cells[row][col].setStyle("-fx-text-fill: #000; -fx-border-color: #435D6C; -fx-border-radius: 0;");
             }
         }
         help_counter = 0;
